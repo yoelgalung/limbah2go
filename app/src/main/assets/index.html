@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#12391d">
+<meta name="description" content="Limbah2GO - layanan jemput minyak jelantah dan botol plastik di Tangerang Selatan.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/jep-192.png">
+<title>Limbah2GO</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+ --bg:#f3f7f2;--card:#fff;--ink:#14231b;--mute:#65766c;--line:#dce7dc;
+ --brand:#247a35;--onbrand:#fff;--oil:#e5a11a;--oilsoft:#fff3d5;
+ --pet:#168f83;--petsoft:#dff5ef;--shadow:0 12px 34px rgba(25,65,35,.08);
+ color-scheme:light;
+ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);
+ padding-bottom:env(safe-area-inset-bottom,0px)
+}
+@media (prefers-color-scheme:dark){
+ :root:not([data-theme="light"]){--bg:#0b1711;--card:#14241b;--ink:#edf5ee;--mute:#a0b3a5;--line:#2b4233;--brand:#7bd36f;--onbrand:#09200e;--oilsoft:#3a2d12;--petsoft:#103c34;--shadow:0 12px 34px rgba(0,0,0,.22);color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#0b1711;--card:#14241b;--ink:#edf5ee;--mute:#a0b3a5;--line:#2b4233;--brand:#7bd36f;--onbrand:#09200e;--oilsoft:#3a2d12;--petsoft:#103c34;--shadow:0 12px 34px rgba(0,0,0,.22);color-scheme:dark}
+:root[data-theme="light"]{color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "Figtree",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:520px;margin:0 auto;padding:18px 16px calc(42px + env(safe-area-inset-bottom,0px))}
+h1,h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;margin:0;letter-spacing:-.035em}
+.banner{position:relative;overflow:hidden;background:radial-gradient(circle at 100% 0%,rgba(126,211,33,.22),transparent 40%),linear-gradient(135deg,#071b10 0%,#0b321b 58%,#15542b 100%);color:#fff;border-radius:26px;padding:20px;margin-bottom:20px;border:1px solid rgba(158,220,129,.22);box-shadow:0 16px 36px rgba(13,58,26,.18)}
+.banner:after{content:"";position:absolute;width:190px;height:190px;border:1px solid rgba(190,240,166,.12);border-radius:50%;right:-80px;bottom:-115px;box-shadow:0 0 0 22px rgba(190,240,166,.035),0 0 0 44px rgba(190,240,166,.025);pointer-events:none}
+.brand{display:flex;align-items:center;gap:13px;position:relative;z-index:1}
+.brand img{width:62px;height:62px;object-fit:cover;border-radius:17px;flex:none;border:1px solid rgba(255,255,255,.24);box-shadow:0 6px 18px rgba(0,0,0,.2)}
+h1{font-size:clamp(29px,8vw,36px);line-height:1;font-weight:800;color:#a5ed62}
+.banner p{position:relative;z-index:1;margin:16px 0 0;font-size:16px;line-height:1.4;font-weight:700;max-width:330px}
+.banner small{position:relative;z-index:1;display:block;margin-top:7px;color:#c0d9c1;font-size:13px}
+.banner .tel{position:relative;z-index:1;display:inline-flex;align-items:center;justify-content:center;margin-top:14px;margin-right:7px;color:#10220e;background:#a5ed62;font-weight:800;text-decoration:none;border-radius:12px;padding:10px 14px;font-size:13px;box-shadow:0 5px 14px rgba(0,0,0,.12)}
+.banner .tel+ .tel{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.22);box-shadow:none}
+#bar{border-radius:14px;box-shadow:none}
+.loc{border:1px solid var(--line);background:var(--card);border-radius:18px;padding:14px;display:grid;gap:11px;box-shadow:var(--shadow)}
+.loc .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.loc iframe{width:100%;height:220px;border:0;border-radius:14px;display:none;background:var(--line)}
+.loc iframe.on{display:block}
+.loc a{color:var(--brand);font-weight:700}
+.dlg{position:fixed;inset:0;background:rgba(2,12,6,.62);display:none;align-items:flex-end;justify-content:center;z-index:20;padding:16px;backdrop-filter:blur(5px)}
+.dlg.on{display:flex}
+.dlg div{background:var(--card);border-radius:24px;padding:20px;width:100%;max-width:448px;display:grid;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.dlg h3{margin:0;font:800 20px "Bricolage Grotesque",system-ui,sans-serif}
+.dlg p{margin:0;color:var(--mute);font-size:14px}
+.col{display:grid;gap:9px;align-content:start;min-width:0}
+.opt{width:100%}
+.pts{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px;display:grid;gap:6px;font-size:13px;box-shadow:0 5px 16px rgba(20,55,30,.035)}
+.pts small{color:var(--mute)}
+.pts .top{display:flex;align-items:center;gap:8px}
+.pts svg{width:28px;height:28px;flex:none}
+.bar{flex:1;height:10px;border-radius:99px;background:#3a4140;overflow:hidden}
+.fill{height:100%;width:0;border-radius:99px;transition:width .7s}
+.fill.oil{background:linear-gradient(90deg,#f5b31a,#f57c00)}
+.fill.pet{background:linear-gradient(90deg,#2a9d8f,#2d7fd6)}
+.tuk,.sm{font:700 13px Figtree,system-ui,sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 11px;cursor:pointer;transition:transform .15s,border-color .15s}
+.sm:active,.tuk:active,.btn:active,.opt:active{transform:scale(.985)}
+.cf{position:fixed;inset:0;pointer-events:none;z-index:30;display:none}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.opt{border:1.5px solid var(--line);background:var(--card);border-radius:20px;padding:16px 13px;text-align:left;font:inherit;color:inherit;cursor:pointer;box-shadow:var(--shadow);transition:border-color .18s,transform .18s,background .18s}
+.opt b{display:block;font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:17px;line-height:1.2;margin-top:8px}
+.opt span{display:block;color:var(--mute);font-size:12px;line-height:1.4;margin-top:5px}
+.opt svg{width:42px;height:42px}
+.opt[aria-pressed="true"]{border-color:var(--brand);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 13%,transparent),var(--shadow)}
+.opt.oil[aria-pressed="true"]{background:var(--oilsoft)}
+.opt.pet[aria-pressed="true"]{background:var(--petsoft)}
+form{margin-top:20px;display:grid;gap:13px}
+label{display:grid;gap:7px;font-weight:700;font-size:13px;color:var(--ink)}
+input,textarea,select{font:500 15px Figtree,system-ui,sans-serif;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:13px;padding:12px 13px;width:100%;min-height:47px;transition:border-color .18s,box-shadow .18s}
+textarea{min-height:82px;resize:vertical}
+input::placeholder,textarea::placeholder{color:var(--mute);opacity:.72}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 13%,transparent)}
+:focus-visible{outline:3px solid var(--oil);outline-offset:2px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.btn{background:linear-gradient(135deg,#2e873e,#1e6c32);color:#fff;border:0;border-radius:14px;padding:15px;font:800 16px "Bricolage Grotesque",system-ui,sans-serif;cursor:pointer;width:100%;box-shadow:0 8px 18px rgba(35,119,53,.18);transition:transform .15s,filter .15s}
+.btn:hover{filter:brightness(1.05)}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);font:700 13px Figtree,system-ui,sans-serif;padding:11px;box-shadow:none}
+.hint{color:var(--mute);font-size:13px;margin:0;line-height:1.5}
+h2{font-size:22px;margin:30px 0 12px;letter-spacing:-.025em}
+.item{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px 14px;margin-bottom:10px;display:flex;justify-content:space-between;gap:10px;align-items:center;box-shadow:0 5px 18px rgba(20,55,30,.035)}
+.item small{color:var(--mute);display:block;font-size:12px;line-height:1.5;margin-top:3px}
+.tag{font-size:11px;font-weight:800;border-radius:8px;padding:4px 8px;white-space:nowrap}
+.tag.oil{background:var(--oilsoft);color:#8a5a00}.tag.pet{background:var(--petsoft);color:#087367}
+details{margin-top:28px}summary{cursor:pointer;color:var(--mute);font-weight:700}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));max-width:448px;margin:auto;background:#173e24;color:#fff;padding:14px 16px;border-radius:14px;font-weight:700;display:none;box-shadow:0 12px 30px rgba(0,0,0,.22);z-index:50}
+.toast.on{display:block}
+[hidden]{display:none!important}
+.sm{font:700 13px Figtree,system-ui,sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:11px;padding:10px 12px;cursor:pointer}
+.item.g{display:grid}.item.g .sm,.item.g .row{margin-top:8px}
+.tabb{font:800 15px "Bricolage Grotesque",system-ui,sans-serif;color:var(--mute);background:var(--card);border:1.5px solid var(--line);border-radius:13px;padding:12px;cursor:pointer}
+.tabb[aria-pressed="true"]{border-color:var(--brand);background:var(--petsoft);color:var(--brand)}
+.st{font-size:23px}
+.item a{color:var(--brand);font-weight:700}
+.rw{position:fixed;inset:0;z-index:25;background:rgba(2,12,6,.78);display:flex;align-items:center;justify-content:center;padding:20px;cursor:pointer;backdrop-filter:blur(5px)}
+.rwc{position:relative;overflow:hidden;width:100%;max-width:400px;text-align:center;color:#fff;border-radius:28px;padding:30px 22px 22px;background:linear-gradient(150deg,#032a17 0%,#0a6a2e 48%,#5fc21e 115%);border:1.5px solid rgba(240,214,140,.75);box-shadow:0 0 0 6px rgba(126,211,33,.12),0 24px 60px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.25);animation:pop .5s cubic-bezier(.2,.9,.3,1.2)}
+.rwc::after{content:"";position:absolute;top:-30%;bottom:-30%;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);transform:skewX(-18deg);animation:shine 1.8s .5s ease-out 1 forwards}
+.rwc h3{font:800 34px/1 "Bricolage Grotesque",system-ui,sans-serif;margin:10px 0;color:#f6e3a1}
+.rwc p{margin:6px 0;font-size:15px;line-height:1.4}
+.rwbig{font-weight:700}
+.rwlogo{width:92px;height:92px;color:#f6e3a1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.45))}
+#rwp span{display:block;margin:8px auto;padding:10px 14px;border-radius:14px;background:rgba(0,0,0,.28);border:1px solid rgba(240,214,140,.55);font:800 19px "Bricolage Grotesque",system-ui,sans-serif;color:#f6e3a1}
+.rwc small{display:block;margin-top:14px;color:#cfe9c0}
+@keyframes pop{from{transform:scale(.82);opacity:0}to{transform:none;opacity:1}}
+@keyframes shine{to{left:130%}}
+@media(max-width:360px){main{padding-left:12px;padding-right:12px}.banner{padding:17px}.brand img{width:54px;height:54px}.pick{gap:8px}.opt{padding:13px 10px}.opt b{font-size:15px}.row{gap:8px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}.rwc,.rwc::after{animation:none}}
+
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+<main>
+<header class="banner">
+<div class="brand"><img src="data:image/jpeg;base64,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" alt="Logo JEP"><h1>Limbah2GO</h1></div>
+<p>Solusi jemput limbah plastikmu dan minyak jelantahmu</p>
+<small>Wilayah Tangerang Selatan</small>
+<a class="tel" href="tel:081384648973">Telepon 081384648973</a><a class="tel" href="https://wa.me/6281384648973" target="_blank" rel="noopener">WhatsApp</a>
+</header>
+<div id="bar" class="item" hidden><span id="who"></span><button class="sm" id="out" type="button">Keluar</button></div>
+<div id="v-auth" hidden>
+<div class="row"><button class="tabb" id="tab-in" type="button" aria-pressed="true" data-m="in,up">Masuk</button><button class="tabb" id="tab-up" type="button" aria-pressed="false" data-m="in,up">Daftar</button></div>
+<form id="au" style="margin-top:16px">
+<button class="btn ghost" type="button" id="au-g" data-m="in,up">Lanjut dengan Google</button>
+<label data-m="in,up">Email<input id="au-email" type="email" autocomplete="email"></label>
+<label data-m="in,up">Password (minimal 6 karakter)<input id="au-pass" type="password" autocomplete="current-password"></label>
+<label data-m="up,fill">Nama<input id="au-nama" autocomplete="name"></label>
+<label data-m="up,fill">Nomor HP<input id="au-hp" type="tel" inputmode="tel" autocomplete="tel" placeholder="08123456789"></label>
+<label data-m="up,fill">Daftar sebagai<select id="au-peran"><option value="klien">Klien (setor limbah)</option><option value="driver">Mitra driver (perlu persetujuan admin)</option></select></label>
+<button class="btn" id="au-go" type="submit">Masuk</button>
+<p class="hint" id="authmsg"></p>
+</form></div>
+<div id="v-admin" hidden></div>
+<div id="v-driver" hidden></div>
+<div id="v-klien" hidden>
+
+<div class="pick" role="group" aria-label="Jenis jemputan">
+<div class="col"><button class="opt oil" type="button" data-t="oil" aria-pressed="true">
+<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 5C17 16 11 22 11 30a13 13 0 0 0 26 0C37 22 31 16 24 5Z" fill="#E8A317"/><path d="M18 31a6 6 0 0 0 6 6" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/></svg>
+<b>Jemput jelantah</b><span>Minimal 10 liter</span></button><div class="pts" id="pt-oil"></div></div>
+<div class="col"><button class="opt pet" type="button" data-t="pet" aria-pressed="false">
+<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="19" y="4" width="10" height="6" rx="2" fill="#2A9D8F"/><path d="M19 10h10l4 8v22a4 4 0 0 1-4 4H19a4 4 0 0 1-4-4V18Z" fill="#2A9D8F" opacity=".35" stroke="#2A9D8F" stroke-width="2.5"/><path d="M16 26h16" stroke="#2A9D8F" stroke-width="2.5"/></svg>
+<b>Jemput botol PET</b><span>Plastik bekas, minimal 3 kg</span></button><div class="pts" id="pt-pet"></div></div>
+</div>
+
+<form id="f">
+<label>Nama<input id="nama" required autocomplete="name" placeholder="Nama lengkap"></label>
+<label>Nomor WhatsApp<input id="hp" required type="tel" inputmode="tel" autocomplete="tel" placeholder="08123456789"></label>
+<label>Alamat penjemputan<textarea id="alamat" required placeholder="Jalan, nomor rumah, patokan"></textarea></label>
+<div class="loc">
+<b>Titik lokasi Google Maps</b>
+<div class="btns"><button class="btn ghost" type="button" id="gps">Pakai lokasi saya</button><button class="btn ghost" type="button" id="clr">Hapus titik</button></div>
+<button class="btn ghost" type="button" id="prev">Tampilkan peta dari alamat</button>
+<input id="maplink" placeholder="Atau tempel link Google Maps / koordinat">
+<iframe id="map" title="Peta lokasi penjemputan" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+<p class="hint" id="locinfo">Belum ada titik lokasi. Titik membantu driver menemukan rumahmu.</p>
+</div>
+<label id="jenisw">Jenis plastik<select id="jenis"><option>Botol PET</option><option>Tutup botol</option><option>Tutup galon</option><option>Campur (botol dan tutup)</option></select></label>
+<div class="row">
+<label><span id="qlabel">Perkiraan jumlah (liter)</span><input id="qty" required type="number" inputmode="decimal" min="0.5" step="0.5" placeholder="5"></label>
+<label>Wadah<select id="wadah"></select></label>
+</div>
+<div class="row">
+<label>Tanggal<input id="tgl" required type="date"></label>
+<label>Jam<select id="jam"></select></label>
+</div>
+<p class="hint" id="jamhint" style="margin-top:-6px"></p>
+<label>Catatan (boleh kosong)<input id="cat" placeholder="Contoh: taruh di depan pagar"></label>
+<button class="btn" type="submit">Kirim permintaan jemput</button>
+<p class="hint" id="hint"></p>
+</form>
+
+<h2>Riwayat permintaan</h2>
+<div id="list"><p class="hint">Belum ada permintaan. Yang kamu kirim akan muncul di sini.</p></div>
+
+</div>
+</main>
+<div class="dlg" id="dlg" role="dialog" aria-modal="true" aria-labelledby="dt"><div>
+<h3 id="dt">Izinkan Limbah2GO mengakses lokasi Anda?</h3>
+<p>Lokasi dipakai untuk menandai titik penjemputan di Google Maps.</p>
+<button class="btn" type="button" id="once">Saat digunakan</button>
+<button class="btn ghost" type="button" id="always">Selalu</button>
+<button class="btn ghost" type="button" id="deny">Jangan izinkan</button>
+</div></div>
+<canvas class="cf" id="cf"></canvas>
+<div class="rw" id="rw" role="dialog" aria-modal="true" aria-label="Selamat, setoran tercatat" hidden>
+<div class="rwc">
+<svg class="rwlogo" viewBox="0 0 64 64" aria-hidden="true"><defs><g id="ra"><path d="M32 10A22 22 0 0 1 51 21" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M57 17.5L55 28L45 24.5Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></g></defs><use href="#ra"/><use href="#ra" transform="rotate(120 32 32)"/><use href="#ra" transform="rotate(240 32 32)"/></svg>
+<h3>Selamat!</h3>
+<p>Kamu sudah menyelamatkan bumi dengan limbahmu ini.</p>
+<p class="rwbig" id="rwq"></p>
+<div id="rwp"></div>
+<p>Tukarkan point reward kepada kami, hubungi nomor di atas: 081384648973.</p>
+<small>Ketuk di mana saja untuk menutup</small>
+</div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+var $=function(i){return document.getElementById(i)};
+var type="oil",DEF="6281384648973";
+var CFG={oil:{unit:"liter",label:"Perkiraan jumlah (liter)",wadah:["Jerigen","Botol","Galon","Ember tertutup"],name:"Jelantah",hint:"Simpan jelantah di wadah tertutup, sudah dingin dan disaring."},
+pet:{unit:"kg",label:"Perkiraan berat (kg)",wadah:["Karung","Kantong plastik","Kardus","Lepas, belum dikemas"],name:"Botol PET",hint:"Lebih bagus jika botol sudah kosong dan tutupnya dipisah."}};
+function store(k,v){try{if(v===undefined){return localStorage.getItem(k)}localStorage.setItem(k,v)}catch(e){return null}}
+function toast(t){var e=$("toast");e.textContent=t;e.className="toast on";setTimeout(function(){e.className="toast"},3000)}
+CFG.oil.min=10;CFG.oil.every=50;CFG.pet.min=3;CFG.pet.every=10;CFG.pet.name="Limbah plastik";
+CFG.oil.svg='<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 5C17 16 11 22 11 30a13 13 0 0 0 26 0C37 22 31 16 24 5Z" fill="#E8A317"/><path d="M18 31a6 6 0 0 0 6 6" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/></svg>';
+CFG.pet.svg='<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="19" y="4" width="10" height="6" rx="2" fill="#2A9D8F"/><path d="M19 10h10l4 8v22a4 4 0 0 1-4 4H19a4 4 0 0 1-4-4V18Z" fill="#2A9D8F" opacity=".35" stroke="#2A9D8F" stroke-width="2.5"/><path d="M16 26h16" stroke="#2A9D8F" stroke-width="2.5"/></svg>';
+var P={oil:0,pet:0},RD={oil:0,pet:0};
+function fmt(n){return String(Math.round(n*10)/10).replace(".",",")}
+function renderPts(){["oil","pet"].forEach(function(t){var c=CFG[t],tot=P[t]||0,cur=tot%1000,k=Math.floor(tot/c.every);
+$("pt-"+t).innerHTML='<div class="top">'+c.svg+'<div class="bar"><div class="fill '+t+'" style="width:'+(LW[t]||0)+'%"></div></div></div><div>'+fmt(cur)+" / 1000 "+c.unit+'</div><div>Point reward: <b>'+(k*2-(RD[t]||0))+'</b></div><small>Setiap '+c.every+" "+c.unit+' = 2 point</small><button class="tuk" data-t="'+t+'" type="button">Tukar point</button>';var fl=$("pt-"+t).querySelector(".fill");setTimeout(function(){fl.style.width=(cur/10)+"%";LW[t]=cur/10},30)})}
+document.addEventListener("click",function(e){var b=e.target.closest(".tuk");if(!b)return;var t=b.dataset.t,c=CFG[t],n=Math.floor((P[t]||0)/c.every)*2-(RD[t]||0);
+if(!n){toast("Belum ada point untuk ditukar.");return}
+window.open("https://wa.me/"+DEF+"?text="+encodeURIComponent("Halo Limbah2GO, saya ingin menukar "+n+" point reward ("+(t==="oil"?"minyak jelantah":"limbah plastik")+")."),"_blank")});
+function setType(t){type=t;var c=CFG[t];
+document.querySelectorAll(".opt").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.t===t)});
+$("qlabel").textContent=c.label+", minimal "+c.min;$("hint").textContent="Minimal "+c.min+" "+c.unit+". "+c.hint;$("qty").min=c.min;$("qty").placeholder=c.min;$("jenisw").style.display=t==="pet"?"grid":"none";
+$("wadah").innerHTML=c.wadah.map(function(w){return"<option>"+w+"</option>"}).join("")}
+document.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){setType(b.dataset.t)}});
+var d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());
+$("tgl").min=$("tgl").value=d.toISOString().slice(0,10);
+var pos=null;
+function mapUrl(){return pos?"https://www.google.com/maps?q="+pos.lat+","+pos.lng:""}
+function showMap(q){var m=$("map");m.src="https://maps.google.com/maps?q="+encodeURIComponent(q)+"&z=17&output=embed";m.className="on"}
+$("prev").onclick=function(){var a=$("alamat").value.trim();if(pos){showMap(pos.lat+","+pos.lng)}else if(a){showMap(a+", Tangerang Selatan")}else{toast("Isi alamat dulu, atau pakai lokasi saya.")}};
+function showLoc(){var i=$("locinfo");if(pos){showMap(pos.lat+","+pos.lng)}else{$("map").className="";$("map").removeAttribute("src")}
+i.innerHTML=pos?'Titik tersimpan: '+pos.lat.toFixed(5)+', '+pos.lng.toFixed(5)+' · <a href="'+mapUrl()+'" target="_blank" rel="noopener">Cek di Google Maps</a>':"Belum ada titik lokasi. Titik membantu driver menemukan rumahmu."}
+function getGPS(){if(!navigator.geolocation){toast("Perangkat tidak mendukung lokasi. Tempel link Maps saja.");return}
+navigator.geolocation.getCurrentPosition(function(p){pos={lat:p.coords.latitude,lng:p.coords.longitude};showLoc();toast("Titik lokasi disimpan")},
+function(){toast("Lokasi tidak bisa diakses. Tempel link Google Maps atau koordinat.")},{enableHighAccuracy:true,timeout:15000})}
+$("gps").onclick=function(){if(store("perm")==="always"){getGPS()}else{$("dlg").className="dlg on"}};
+$("once").onclick=function(){$("dlg").className="dlg";getGPS()};
+$("always").onclick=function(){store("perm","always");$("dlg").className="dlg";getGPS()};
+$("deny").onclick=function(){$("dlg").className="dlg";toast("Tidak apa-apa. Tempel link Maps atau tulis alamat saja.")};
+$("clr").onclick=function(){pos=null;$("maplink").value="";showLoc()};
+$("maplink").onchange=function(){var t=$("maplink").value,m=t.match(/(-?\d{1,3}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/);
+if(m){pos={lat:+m[1],lng:+m[2]};showLoc()}else if(t.trim()){toast("Koordinat tidak terbaca. Pakai link panjang Maps, atau tombol Pakai lokasi saya.")}};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+var CONFIG={apiKey:"AIzaSyCe8NcXmO1PrhOwBmxpIMccwCkNftAIQdI",authDomain:"limbah2go.firebaseapp.com",projectId:"limbah2go",appId:"1:12862364813:web:031b49d99f1ee7ee2a56c4"};
+var ST={menunggu:["⏳","Menunggu persetujuan admin"],disetujui:["✓","Disetujui admin"],menuju:["🏍️","Driver menuju lokasimu"],selesai:["✓✓","Selesai, point sudah masuk"],ditolak:["✕","Ditolak"]};
+var db,au,me=null,prof=null,unsub=[],creating=false,mode="in",AD={rs:[],us:[],rd:[],tab:"r"},SV=function(){return firebase.firestore.FieldValue.serverTimestamp()};
+function ts(x){return x.createdAt&&x.createdAt.toMillis?x.createdAt.toMillis():Date.now()}
+function waNum(p){p=String(p).replace(/\D/g,"");return p.indexOf("0")===0?"62"+p.slice(1):p}
+function unsubAll(){unsub.forEach(function(f){f()});unsub=[]}
+function show(v){["auth","admin","driver","klien"].forEach(function(x){$("v-"+x).hidden=x!==v});$("bar").hidden=!me}
+function errMsg(e){var m={"auth/invalid-credential":"Email atau password salah.","auth/email-already-in-use":"Email sudah terdaftar.","auth/weak-password":"Password minimal 6 karakter.","auth/invalid-email":"Format email salah.","auth/popup-closed-by-user":"Login dibatalkan.","permission-denied":"Tidak punya izin untuk aksi ini."};return m[e.code]||("Gagal: "+(e.message||e.code))}
+function setMode(m){mode=m;document.querySelectorAll("[data-m]").forEach(function(e){e.hidden=e.dataset.m.split(",").indexOf(m)<0});
+$("au-go").textContent={in:"Masuk",up:"Daftar",fill:"Simpan profil"}[m];$("tab-in").setAttribute("aria-pressed",m==="in");$("tab-up").setAttribute("aria-pressed",m==="up");
+if(m==="fill")$("who").textContent="Lengkapi profil untuk lanjut"}
+$("tab-in").onclick=function(){setMode("in")};$("tab-up").onclick=function(){setMode("up")};
+$("out").onclick=function(){if(au)au.signOut()};
+$("au-g").onclick=function(){if(!au){toast("Firebase belum diisi.");return}au.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(er){toast(errMsg(er))})};
+function mkProf(uid,em,nm,hp){var r=$("au-peran").value;return db.collection("users").doc(uid).set({name:nm,phone:hp,email:em,role:r,approved:r==="klien",createdAt:SV()})}
+$("au").onsubmit=async function(e){e.preventDefault();if(!au){toast("Firebase belum diisi.");return}
+var em=$("au-email").value.trim(),pw=$("au-pass").value,nm=$("au-nama").value.trim(),hp=$("au-hp").value.trim();
+if(mode!=="in"&&(!nm||hp.replace(/\D/g,"").length<9)){toast("Isi nama dan nomor HP yang benar.");return}
+try{if(mode==="in")await au.signInWithEmailAndPassword(em,pw);
+else if(mode==="up"){creating=true;var cr=await au.createUserWithEmailAndPassword(em,pw);await mkProf(cr.user.uid,em,nm,hp);creating=false;boot(cr.user)}
+else{await mkProf(me.uid,me.email||"",nm,hp);boot(me)}}catch(er){creating=false;toast(errMsg(er))}};
+async function boot(u){unsubAll();me=u;P={oil:0,pet:0};RD={oil:0,pet:0};
+if(!u){prof=null;show("auth");setMode("in");return}
+try{var d=await db.collection("users").doc(u.uid).get();
+if(!d.exists){show("auth");setMode("fill");$("au-nama").value=u.displayName||"";return}
+prof=d.data();$("who").textContent=prof.name+" · "+prof.role;
+if(prof.role==="admin")adminView();else if(prof.role==="driver")driverView();else klienView()}catch(er){toast(errMsg(er))}}
+/* ---------- KLIEN ---------- */
+function klienView(){show("klien");$("nama").value=prof.name;$("hp").value=prof.phone;
+unsub.push(db.collection("requests").where("uid","==",me.uid).onSnapshot(function(q){var rs=q.docs.map(function(d){return Object.assign({id:d.id},d.data())});renderHist(rs);calcPts(rs)},function(er){toast(errMsg(er))}));
+unsub.push(db.collection("redemptions").where("uid","==",me.uid).onSnapshot(function(q){RD={oil:0,pet:0};q.forEach(function(d){var x=d.data();RD[x.type]+=x.points});renderPts()}))}
+var cfOn=false,PEND=[],LW={oil:0,pet:0};
+function getAck(){try{return JSON.parse(store("ack_"+me.uid)||"[]")}catch(e){return[]}}
+function calcPts(rs){var ack=getAck(),n={oil:0,pet:0},pend=[];
+rs.forEach(function(x){if(x.status!=="selesai")return;if(ack.indexOf(x.id)>-1)n[x.type]+=x.actualQty||0;else pend.push(x)});
+P=n;PEND=pend;renderPts();if(pend.length)celebrate()}
+function confetti(){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+var c=$("cf"),g=c.getContext("2d"),cols=["#7ED321","#F5B31A","#F6E3A1","#2A9D8F","#FFFFFF","#2D7FD6"],a=[];
+c.width=innerWidth;c.height=innerHeight;c.style.display="block";cfOn=true;
+for(var i=0;i<140;i++)a.push({x:Math.random()*c.width,y:-20-Math.random()*c.height,w:6+Math.random()*6,h:8+Math.random()*8,vx:(Math.random()-.5)*3,vy:2+Math.random()*4,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:cols[i%6]});
+(function f(){g.clearRect(0,0,c.width,c.height);if(!cfOn){c.style.display="none";return}
+a.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;if(p.y>c.height+20){p.y=-20;p.x=Math.random()*c.width}g.save();g.translate(p.x,p.y);g.rotate(p.r);g.fillStyle=p.c;g.fillRect(-p.w/2,-p.h/2,p.w,p.h);g.restore()});
+requestAnimationFrame(f)})()}
+function celebrate(){var lines=[],pts=[];
+["oil","pet"].forEach(function(t){var c=CFG[t],q=0;PEND.forEach(function(x){if(x.type===t)q+=x.actualQty||0});if(!q)return;
+var b=P[t]||0,g=Math.floor((b+q)/c.every)*2-Math.floor(b/c.every)*2,left=c.every-((b+q)%c.every),nm=t==="oil"?"minyak jelantah":"limbah plastik";
+lines.push(fmt(q)+" "+c.unit+" "+nm);pts.push(g>0?"+"+g+" point reward "+(t==="oil"?"jelantah":"plastik"):"Tinggal "+fmt(left)+" "+c.unit+" lagi untuk +2 point")});
+$("rwq").textContent="Setoran tercatat: "+lines.join(" dan ");
+$("rwp").innerHTML=pts.map(function(x){return"<span>"+x+"</span>"}).join("");
+if($("rw").hidden){$("rw").hidden=false;confetti()}}
+$("rw").onclick=function(){var ack=getAck();PEND.forEach(function(x){ack.push(x.id);P[x.type]=(P[x.type]||0)+(x.actualQty||0)});
+store("ack_"+me.uid,JSON.stringify(ack));PEND=[];$("rw").hidden=true;cfOn=false;renderPts()};
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("rw").hidden)$("rw").click()});
+function p2(n){return n<10?"0"+n:""+n}
+function slots(){var v=$("tgl").value,dt=v?new Date(v+"T00:00:00"):new Date(),wk=dt.getDay(),we=wk===0||wk===6,a=we?10:19,b=we?19:21,h="";
+for(var i=a;i<b;i++)h+="<option>"+p2(i)+".00 – "+p2(i+1)+".00</option>";
+$("jam").innerHTML=h;$("jamhint").textContent=we?"Sabtu dan Minggu: jemput jam 10.00 sampai 19.00.":"Senin sampai Jumat: jemput jam 19.00 sampai 21.00."}
+function renderHist(rs){rs=rs.slice().sort(function(a,b){return ts(b)-ts(a)});
+$("list").innerHTML=rs.length?rs.map(function(x){var s=ST[x.status]||["",x.status];
+return'<div class="item"><div><b>'+CFG[x.type].name+" · "+x.qty+" "+x.unit+'</b><small>'+esc(x.tgl)+" · "+s[1]+(x.status==="selesai"&&x.actualQty?" ("+x.actualQty+" "+x.unit+" tercatat)":"")+'</small></div><span class="st">'+s[0]+'</span></div>'}).join(""):'<p class="hint">Belum ada permintaan. Yang kamu kirim akan muncul di sini.</p>'}
+$("f").onsubmit=function(e){e.preventDefault();var c=CFG[type],q=parseFloat($("qty").value);
+var nm=$("nama").value.trim(),hp=$("hp").value.trim(),al=$("alamat").value.trim(),tg=$("tgl").value,jm=$("jam").value,ct=$("cat").value.trim(),jn=type==="pet"?$("jenis").value:"";
+var m="*Limbah2GO - Permintaan jemput "+c.name+"*\n\nNama: "+nm+"\nWhatsApp: "+hp+"\nAlamat: "+al+(jn?"\nJenis: "+jn:"")+"\nJumlah: "+q+" "+c.unit+"\nWadah: "+$("wadah").value+"\nTanggal: "+tg+", jam "+jm+(ct?"\nCatatan: "+ct:"")+(pos?"\nLokasi: "+mapUrl():"");
+window.open("https://wa.me/"+DEF+"?text="+encodeURIComponent(m),"_blank");
+db.collection("requests").add({uid:me.uid,nama:nm,hp:hp,alamat:al,lat:pos?pos.lat:null,lng:pos?pos.lng:null,type:type,jenis:jn,qty:q,unit:c.unit,wadah:$("wadah").value,tgl:tg,jam:jm,cat:ct,status:"menunggu",createdAt:SV()})
+.then(function(){toast("Permintaan tersimpan. Pantau statusnya di riwayat.")}).catch(function(er){toast(errMsg(er))})};
+/* ---------- KARTU PERMINTAAN (admin dan driver) ---------- */
+function info(x){var s=ST[x.status]||["",x.status],mp=x.lat!=null?'<a href="https://www.google.com/maps?q='+x.lat+","+x.lng+'" target="_blank" rel="noopener">Buka peta</a> · ':"";
+return'<div><b>'+esc(x.nama)+'</b> <span class="tag '+x.type+'">'+CFG[x.type].name+'</span><small>'+x.qty+" "+x.unit+(x.jenis?" · "+esc(x.jenis):"")+" · "+esc(x.tgl)+", "+esc(x.jam)+'</small><small>'+esc(x.alamat)+'</small><small>'+mp+'<a href="https://wa.me/'+waNum(x.hp)+'" target="_blank" rel="noopener">WhatsApp klien</a></small><small>'+s[0]+" "+s[1]+(x.actualQty?" · "+x.actualQty+" "+x.unit:"")+'</small></div>'}
+/* ---------- ADMIN ---------- */
+function adminView(){show("admin");
+unsub.push(db.collection("requests").onSnapshot(function(q){AD.rs=q.docs.map(function(d){return Object.assign({id:d.id},d.data())});drawAdmin()},function(er){toast(errMsg(er))}));
+unsub.push(db.collection("users").onSnapshot(function(q){AD.us=q.docs.map(function(d){return Object.assign({id:d.id},d.data())});drawAdmin()}));
+unsub.push(db.collection("redemptions").onSnapshot(function(q){AD.rd=q.docs.map(function(d){return d.data()});drawAdmin()}))}
+function ptsOf(uid){var e={oil:0,pet:0},r={oil:0,pet:0};AD.rs.forEach(function(x){if(x.uid===uid&&x.status==="selesai")e[x.type]+=x.actualQty||0});AD.rd.forEach(function(x){if(x.uid===uid)r[x.type]+=x.points});
+return{oil:Math.floor(e.oil/CFG.oil.every)*2-r.oil,pet:Math.floor(e.pet/CFG.pet.every)*2-r.pet}}
+function reqCard(x){var a=x.status==="menunggu"?'<div class="row"><button class="sm" data-act="ok" data-id="'+x.id+'">Setujui</button><button class="sm" data-act="no" data-id="'+x.id+'">Tolak</button></div>':"";return'<div class="item g">'+info(x)+a+'</div>'}
+function userCard(u){var pt=ptsOf(u.id),a="";
+if(u.role==="driver"&&!u.approved)a+='<button class="sm" data-act="drv" data-id="'+u.id+'">Setujui driver</button>';
+if(u.role==="klien")a+='<button class="sm" data-act="adm" data-id="'+u.id+'">Jadikan admin</button>';
+if(u.role==="klien")a+=["oil","pet"].map(function(t){return'<button class="sm" data-act="rd" data-t="'+t+'" data-id="'+u.id+'">Tukar point '+(t==="oil"?"jelantah":"plastik")+" ("+pt[t]+")</button>"}).join("");
+return'<div class="item g"><div><b>'+esc(u.name)+'</b> <span class="tag">'+u.role+(u.role==="driver"&&!u.approved?" (menunggu)":"")+'</span><small>'+esc(u.phone)+" · "+esc(u.email||"")+'</small></div>'+a+'</div>'}
+function drawAdmin(){var h='<div class="row"><button class="tabb" data-tab="r" aria-pressed="'+(AD.tab==="r")+'">Permintaan</button><button class="tabb" data-tab="u" aria-pressed="'+(AD.tab==="u")+'">Pengguna</button></div>';
+if(AD.tab==="r"){var rs=AD.rs.slice().sort(function(a,b){return ts(b)-ts(a)});h+="<h2>Permintaan</h2>"+(rs.map(reqCard).join("")||'<p class="hint">Belum ada permintaan.</p>')}
+else h+="<h2>Pengguna</h2>"+AD.us.map(userCard).join("");$("v-admin").innerHTML=h}
+$("v-admin").onclick=async function(e){var b=e.target.closest("[data-tab],[data-act]");if(!b)return;
+if(b.dataset.tab){AD.tab=b.dataset.tab;drawAdmin();return}
+var id=b.dataset.id,a=b.dataset.act,R=db.collection("requests").doc(id),U=db.collection("users").doc(id);
+try{if(a==="ok")await R.update({status:"disetujui",approvedBy:me.uid});
+else if(a==="no")await R.update({status:"ditolak",approvedBy:me.uid});
+else if(a==="drv")await U.update({approved:true});
+else if(a==="adm"){if(confirm("Jadikan pengguna ini admin? Admin bisa melihat semua data."))await U.update({role:"admin",approved:true})}
+else if(a==="rd"){var t=b.dataset.t,av=ptsOf(id)[t],n=parseInt(prompt("Jumlah point yang ditukar (tersedia "+av+")",av),10);
+if(n>0&&n<=av){await db.collection("redemptions").add({uid:id,type:t,points:n,by:me.uid,createdAt:SV()});toast("Penukaran dicatat")}else if(n){toast("Jumlah tidak valid")}}}catch(er){toast(errMsg(er))}};
+/* ---------- DRIVER ---------- */
+function driverCard(x){var b=x.status==="disetujui"?'<button class="sm" data-act="go" data-id="'+x.id+'">Berangkat ke lokasi</button>':'<button class="sm" data-act="pick" data-id="'+x.id+'" data-q="'+x.qty+'" data-u="'+x.unit+'">Pickup selesai</button>';return'<div class="item g">'+info(x)+b+'</div>'}
+function driverView(){show("driver");
+if(!prof.approved){$("v-driver").innerHTML='<h2>Menunggu persetujuan</h2><p class="hint">Akun driver kamu belum disetujui admin. Hubungi 081384648973.</p>';return}
+unsub.push(db.collection("requests").where("status","in",["disetujui","menuju"]).onSnapshot(function(q){
+var rs=q.docs.map(function(d){return Object.assign({id:d.id},d.data())}).filter(function(x){return x.status==="disetujui"||x.driverUid===me.uid}).sort(function(a,b){return ts(a)-ts(b)});
+$("v-driver").innerHTML="<h2>Jemputan</h2>"+(rs.map(driverCard).join("")||'<p class="hint">Belum ada jemputan.</p>')},function(er){toast(errMsg(er))}))}
+$("v-driver").onclick=async function(e){var b=e.target.closest("[data-act]");if(!b)return;var R=db.collection("requests").doc(b.dataset.id);
+try{if(b.dataset.act==="go"){await R.update({status:"menuju",driverUid:me.uid});toast("Status: driver menuju lokasi")}
+else{var q=parseFloat(prompt("Hasil timbang ("+b.dataset.u+")",b.dataset.q));if(q>0){await R.update({status:"selesai",actualQty:q,pickedAt:SV()});toast("Pickup selesai. Point klien bertambah.")}}}catch(er){toast(errMsg(er))}};
+/* ---------- MULAI ---------- */
+setType("oil");renderPts();$("tgl").onchange=slots;slots();
+if(CONFIG.apiKey.indexOf("ISI")===0){show("auth");setMode("in");$("authmsg").textContent="Aplikasi belum terhubung ke Firebase. Isi CONFIG di bagian atas skrip, lihat PANDUAN.md."}
+else{firebase.initializeApp(CONFIG);au=firebase.auth();db=firebase.firestore();au.onAuthStateChanged(function(u){if(!creating)boot(u)})}
+</script>
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  window.addEventListener("load", function(){ navigator.serviceWorker.register("./sw.js").catch(function(e){ console.warn("Service worker:", e); }); });
+}
+</script>
+</body>
+</html>
